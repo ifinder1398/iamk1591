@@ -851,6 +851,10 @@ footer p {
       <input type="tel" placeholder="請輸入聯絡電話">
     </div>
     <div class="f-field">
+      <label>LINE ID</label>
+      <input type="text" placeholder="請輸入 LINE ID">
+    </div>
+    <div class="f-field">
       <label>Email · 信箱</label>
       <input type="email" placeholder="請輸入電子信箱">
     </div>
@@ -887,6 +891,7 @@ document.querySelector('.btn-submit').addEventListener('click', async () => {
   const btn = document.querySelector('.btn-submit');
   const name   = document.querySelector('input[type="text"]').value.trim();
   const phone  = document.querySelector('input[type="tel"]').value.trim();
+  const lineId = document.querySelectorAll('input[type="text"]')[1].value.trim();
   const email  = document.querySelector('input[type="email"]').value.trim();
   const source = document.querySelector('select').value;
 
@@ -904,7 +909,7 @@ document.querySelector('.btn-submit').addEventListener('click', async () => {
       method: 'POST',
       mode: 'no-cors',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ name, phone, email, source })
+      body: JSON.stringify({ name, phone, lineId, email, source })
     });
 
     // no-cors means we can't read response, but if no error thrown = success
@@ -914,6 +919,7 @@ document.querySelector('.btn-submit').addEventListener('click', async () => {
     // Clear form
     document.querySelector('input[type="text"]').value = '';
     document.querySelector('input[type="tel"]').value = '';
+    document.querySelectorAll('input[type="text"]')[1].value = '';
     document.querySelector('input[type="email"]').value = '';
     document.querySelector('select').value = '';
 
