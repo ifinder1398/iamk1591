@@ -1,0 +1,941 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>看懂自己，也看懂別人</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@200;300;400;500&family=Cormorant+Garamond:ital,wght@0,300;1,300;1,400&display=swap" rel="stylesheet">
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+html { scroll-behavior:smooth; }
+
+:root {
+  --beige: #F5F0E8;
+  --beige-dark: #EDE6D6;
+  --olive: #3D4430;
+  --olive-mid: #5C6645;
+  --gold: #B8945A;
+  --gold-light: #D4AF7A;
+  --text: #2C2C2C;
+  --text-mid: #5A5248;
+  --text-soft: #8A8070;
+}
+
+body {
+  background: var(--beige);
+  color: var(--text);
+  font-family: 'Noto Serif TC', serif;
+  font-weight: 300;
+  overflow-x: hidden;
+}
+
+/* grain overlay */
+body::after {
+  content:'';
+  position:fixed; inset:0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.032'/%3E%3C/svg%3E");
+  pointer-events:none; z-index:9999;
+}
+
+/* ─────────────────────────────────
+   HERO
+───────────────────────────────── */
+.hero {
+  min-height: 100svh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 80px 28px 110px;
+  position: relative;
+  overflow: hidden;
+  background: var(--beige);
+}
+
+/* Bagua (八卦) SVG watermark background */
+.hero-bg-svg {
+  position: absolute;
+  inset: 0;
+  width: 100%; height: 100%;
+  pointer-events: none;
+  opacity: 0.045;
+}
+
+/* Decorative rings */
+.hero-ring {
+  position: absolute;
+  border-radius: 50%;
+  border: 1px solid rgba(184,148,90,0.15);
+  top: 50%; left: 50%;
+  transform: translate(-50%, -52%);
+  pointer-events: none;
+}
+
+.r1 { width: min(480px,90vw); height: min(480px,90vw); }
+.r2 { width: min(320px,65vw); height: min(320px,65vw); border-color: rgba(184,148,90,0.08); }
+.r3 { width: min(600px,110vw); height: min(600px,110vw); border-color: rgba(184,148,90,0.05); }
+
+.hero-org {
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic;
+  font-size: 0.78rem;
+  letter-spacing: 0.3em;
+  color: var(--gold);
+  margin-bottom: 28px;
+  position: relative;
+  opacity: 0;
+  animation: up 0.9s ease forwards 0.2s;
+}
+
+.hero-title {
+  font-size: clamp(2.8rem, 9vw, 5rem);
+  font-weight: 200;
+  color: var(--olive);
+  letter-spacing: 0.14em;
+  line-height: 1.4;
+  position: relative;
+  opacity: 0;
+  animation: up 0.9s ease forwards 0.4s;
+}
+
+.hero-title span { color: var(--gold); }
+
+.hero-rule {
+  width: 48px; height: 1px;
+  background: linear-gradient(90deg, transparent, var(--gold), transparent);
+  margin: 32px auto;
+  position: relative;
+  opacity: 0;
+  animation: up 0.9s ease forwards 0.6s;
+}
+
+.hero-sub {
+  font-size: clamp(0.9rem, 2.6vw, 1.08rem);
+  color: var(--text-mid);
+  letter-spacing: 0.12em;
+  line-height: 2.5;
+  position: relative;
+  opacity: 0;
+  animation: up 0.9s ease forwards 0.8s;
+}
+
+.hero-cta {
+  margin-top: 48px;
+  position: relative;
+  opacity: 0;
+  animation: up 0.9s ease forwards 1.1s;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+}
+
+.btn-cta {
+  display: inline-block;
+  background: var(--olive);
+  color: var(--beige);
+  padding: 16px 52px;
+  font-family: 'Noto Serif TC', serif;
+  font-size: 0.88rem;
+  font-weight: 300;
+  letter-spacing: 0.35em;
+  border: none;
+  cursor: pointer;
+  text-decoration: none;
+  position: relative;
+  transition: background 0.3s;
+}
+
+.btn-cta::after {
+  content:'';
+  position:absolute;
+  bottom:0; left:20px; right:20px;
+  height:1px; background: var(--gold);
+}
+
+.btn-cta:hover { background: var(--olive-mid); }
+
+.hero-price-tag {
+  font-size: 0.78rem;
+  letter-spacing: 0.2em;
+  color: var(--text-soft);
+}
+
+.hero-price-tag strong {
+  color: var(--gold);
+  font-weight: 400;
+  font-size: 1rem;
+}
+
+.hero-scroll {
+  position: absolute;
+  bottom: 36px; left: 50%;
+  transform: translateX(-50%);
+  opacity:0;
+  animation: up 0.9s ease forwards 1.5s;
+  display:flex; flex-direction:column; align-items:center; gap:6px;
+}
+
+.scroll-txt { font-size: 0.63rem; letter-spacing: 0.3em; color: var(--gold-light); }
+.scroll-line { width:1px; height:34px; background: linear-gradient(180deg, var(--gold-light), transparent); animation: pulse 2s ease-in-out infinite; }
+
+/* ─────────────────────────────────
+   TWO SYSTEMS (dark olive)
+───────────────────────────────── */
+.systems {
+  background: var(--olive);
+  padding: 88px 24px;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Numerology numbers SVG watermark */
+.systems-bg-svg {
+  position: absolute;
+  inset: 0;
+  width: 100%; height: 100%;
+  pointer-events: none;
+  opacity: 1;
+}
+
+.systems-inner {
+  max-width: 680px;
+  margin: 0 auto;
+  text-align: center;
+  position: relative;
+}
+
+.eyebrow {
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic;
+  font-size: 0.78rem;
+  letter-spacing: 0.35em;
+  color: var(--gold-light);
+  margin-bottom: 16px;
+  display: block;
+}
+
+.systems-title {
+  font-size: clamp(1.6rem, 5vw, 2.6rem);
+  font-weight: 200;
+  color: var(--beige);
+  letter-spacing: 0.12em;
+  line-height: 1.65;
+  margin-bottom: 12px;
+}
+
+.systems-title strong { font-weight: 400; color: var(--gold-light); }
+
+.sys-rule {
+  width: 48px; height: 1px;
+  background: linear-gradient(90deg, transparent, var(--gold), transparent);
+  margin: 32px auto 48px;
+}
+
+.sys-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2px;
+  margin-bottom: 2px;
+}
+
+.sys-card {
+  background: rgba(250,248,243,0.05);
+  border: 1px solid rgba(184,148,90,0.2);
+  padding: 40px 28px 36px;
+  text-align: left;
+  transition: background 0.3s;
+  position: relative;
+  overflow: hidden;
+}
+
+/* per-card SVG accent */
+.sys-card-bg {
+  position: absolute;
+  bottom: -10px; right: -10px;
+  opacity: 0.06;
+  pointer-events: none;
+}
+
+.sys-card:hover { background: rgba(250,248,243,0.09); }
+
+.sys-tag {
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic;
+  font-size: 0.7rem;
+  letter-spacing: 0.35em;
+  color: var(--gold);
+  margin-bottom: 6px;
+}
+
+.sys-num {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 3.5rem;
+  font-weight: 300;
+  color: rgba(184,148,90,0.18);
+  line-height: 1;
+  margin-bottom: -6px;
+}
+
+.sys-name {
+  font-size: 1.4rem;
+  font-weight: 400;
+  color: var(--gold-light);
+  letter-spacing: 0.15em;
+  margin-bottom: 12px;
+}
+
+.sys-origin {
+  display: inline-block;
+  font-size: 0.68rem;
+  letter-spacing: 0.25em;
+  color: rgba(212,175,122,0.55);
+  border: 1px solid rgba(212,175,122,0.22);
+  padding: 3px 10px;
+  margin-bottom: 20px;
+}
+
+.sys-desc {
+  font-size: 0.88rem;
+  color: rgba(245,240,232,0.68);
+  line-height: 2.3;
+  letter-spacing: 0.05em;
+}
+
+.sys-bottom {
+  background: rgba(250,248,243,0.04);
+  border: 1px solid rgba(184,148,90,0.15);
+  border-top: none;
+  padding: 28px 32px;
+  text-align: center;
+  font-size: 0.9rem;
+  color: rgba(245,240,232,0.6);
+  letter-spacing: 0.1em;
+  line-height: 2;
+}
+
+.sys-bottom strong { color: var(--gold-light); font-weight: 400; }
+
+/* ─────────────────────────────────
+   INFO + PRICE
+───────────────────────────────── */
+.info-sec {
+  padding: 80px 24px;
+  background: var(--beige-dark);
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Hexagram decoration behind info */
+.info-bg-svg {
+  position: absolute;
+  inset: 0;
+  width: 100%; height: 100%;
+  pointer-events: none;
+  opacity: 1;
+}
+
+.info-inner { max-width: 500px; margin: 0 auto; position: relative; }
+
+.eyebrow-dark {
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic;
+  font-size: 0.78rem;
+  letter-spacing: 0.35em;
+  color: var(--gold);
+  margin-bottom: 36px;
+  display: block;
+}
+
+.price-block {
+  margin-bottom: 40px;
+  padding: 28px 0;
+  border-top: 1px solid rgba(184,148,90,0.2);
+  border-bottom: 1px solid rgba(184,148,90,0.2);
+}
+
+.price-label {
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic;
+  font-size: 0.75rem;
+  letter-spacing: 0.3em;
+  color: var(--text-soft);
+  margin-bottom: 8px;
+}
+
+.price-value {
+  font-size: clamp(2.2rem, 7vw, 3rem);
+  font-weight: 200;
+  color: var(--olive);
+  letter-spacing: 0.08em;
+  line-height: 1.2;
+}
+
+.price-value sup {
+  font-size: 1rem;
+  font-weight: 300;
+  vertical-align: super;
+  color: var(--gold);
+  letter-spacing: 0.05em;
+}
+
+.price-note {
+  font-size: 0.75rem;
+  color: var(--text-soft);
+  letter-spacing: 0.15em;
+  margin-top: 6px;
+}
+
+.info-rows { display: flex; flex-direction: column; }
+
+.info-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 0;
+  border-bottom: 1px solid rgba(184,148,90,0.13);
+}
+
+.info-row:first-child { border-top: 1px solid rgba(184,148,90,0.13); }
+
+.info-lbl {
+  font-size: 0.7rem;
+  letter-spacing: 0.28em;
+  color: var(--gold);
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic;
+}
+
+.info-val { font-size: 0.9rem; color: var(--text-mid); letter-spacing: 0.07em; }
+
+.info-note { margin-top: 28px; font-size: 0.78rem; color: var(--text-soft); letter-spacing: 0.15em; }
+
+/* ─────────────────────────────────
+   FORM
+───────────────────────────────── */
+.form-sec {
+  padding: 80px 24px 100px;
+  text-align: center;
+  background: var(--beige);
+  position: relative;
+  overflow: hidden;
+}
+
+.form-bg-svg {
+  position: absolute;
+  inset: 0;
+  width: 100%; height: 100%;
+  pointer-events: none;
+  opacity: 1;
+}
+
+.form-title {
+  font-size: clamp(1.4rem, 4vw, 2rem);
+  font-weight: 200;
+  color: var(--olive);
+  letter-spacing: 0.12em;
+  line-height: 1.7;
+  margin-bottom: 48px;
+  position: relative;
+}
+
+.form-wrap { max-width: 440px; margin: 0 auto; position: relative; }
+
+.f-field { margin-bottom: 20px; text-align: left; }
+
+.f-field label {
+  display: block;
+  font-size: 0.7rem;
+  letter-spacing: 0.3em;
+  color: var(--gold);
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic;
+  margin-bottom: 8px;
+}
+
+.f-field input, .f-field select {
+  width: 100%;
+  background: var(--beige-dark);
+  border: none;
+  border-bottom: 1px solid var(--gold-light);
+  padding: 13px 4px;
+  font-family: 'Noto Serif TC', serif;
+  font-size: 0.88rem;
+  font-weight: 300;
+  color: var(--text);
+  outline: none;
+  transition: border-color 0.3s, background 0.3s;
+  -webkit-appearance: none;
+  appearance: none;
+  border-radius: 0;
+}
+
+.f-field input:focus, .f-field select:focus { border-color: var(--gold); background: #fff; }
+
+.btn-submit {
+  width: 100%;
+  background: var(--olive);
+  color: var(--beige);
+  border: none;
+  padding: 18px;
+  font-family: 'Noto Serif TC', serif;
+  font-size: 0.88rem;
+  font-weight: 300;
+  letter-spacing: 0.4em;
+  cursor: pointer;
+  margin-top: 12px;
+  position: relative;
+  transition: background 0.3s;
+}
+
+.btn-submit::after {
+  content:'';
+  position:absolute;
+  bottom:0; left:24px; right:24px;
+  height:1px; background:var(--gold);
+}
+
+.btn-submit:hover { background: var(--olive-mid); }
+
+.form-limit { margin-top: 20px; font-size: 0.75rem; letter-spacing: 0.2em; color: var(--text-soft); }
+
+/* ─────────────────────────────────
+   FOOTER
+───────────────────────────────── */
+footer {
+  background: var(--olive);
+  padding: 36px 24px;
+  text-align: center;
+}
+
+footer p {
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic;
+  font-size: 0.8rem;
+  letter-spacing: 0.2em;
+  color: rgba(212,175,122,0.55);
+}
+
+/* ─────────────────────────────────
+   ANIMATIONS
+───────────────────────────────── */
+@keyframes up {
+  from { opacity:0; transform:translateY(20px); }
+  to   { opacity:1; transform:translateY(0); }
+}
+@keyframes pulse { 0%,100%{opacity:0.4} 50%{opacity:1} }
+@keyframes slowspin { from{transform:rotate(0deg)} to{transform:rotate(360deg)} }
+
+.fade { opacity:0; transform:translateY(28px); transition: opacity 0.8s ease, transform 0.8s ease; }
+.fade.on { opacity:1; transform:translateY(0); }
+
+/* ─────────────────────────────────
+   RESPONSIVE
+───────────────────────────────── */
+@media (max-width:540px) {
+  .sys-grid { grid-template-columns:1fr; }
+  .sys-card { padding:30px 22px; }
+  .info-row { flex-direction:column; align-items:flex-start; gap:4px; }
+}
+</style>
+</head>
+<body>
+
+<!-- ══════════ HERO ══════════ -->
+<header class="hero">
+
+  <!-- Bagua 八卦 watermark SVG -->
+  <svg class="hero-bg-svg" viewBox="0 0 800 800" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+    <!-- Outer trigram ring decoration -->
+    <g transform="translate(400,400)">
+      <!-- 8 trigrams arranged in circle, each made of solid/broken lines -->
+      <!-- ☰ Qian (Heaven) - top -->
+      <g transform="rotate(0)translate(0,-260)">
+        <rect x="-22" y="-12" width="44" height="5" rx="2" fill="#3D4430"/>
+        <rect x="-22" y="-3"  width="44" height="5" rx="2" fill="#3D4430"/>
+        <rect x="-22" y="6"   width="44" height="5" rx="2" fill="#3D4430"/>
+      </g>
+      <!-- ☷ Kun (Earth) - bottom -->
+      <g transform="rotate(180)translate(0,-260)">
+        <rect x="-22" y="-12" width="18" height="5" rx="2" fill="#3D4430"/>
+        <rect x="4"   y="-12" width="18" height="5" rx="2" fill="#3D4430"/>
+        <rect x="-22" y="-3"  width="18" height="5" rx="2" fill="#3D4430"/>
+        <rect x="4"   y="-3"  width="18" height="5" rx="2" fill="#3D4430"/>
+        <rect x="-22" y="6"   width="18" height="5" rx="2" fill="#3D4430"/>
+        <rect x="4"   y="6"   width="18" height="5" rx="2" fill="#3D4430"/>
+      </g>
+      <!-- ☵ Kan (Water) - left -->
+      <g transform="rotate(270)translate(0,-260)">
+        <rect x="-22" y="-12" width="18" height="5" rx="2" fill="#3D4430"/>
+        <rect x="4"   y="-12" width="18" height="5" rx="2" fill="#3D4430"/>
+        <rect x="-22" y="-3"  width="44" height="5" rx="2" fill="#3D4430"/>
+        <rect x="-22" y="6"   width="18" height="5" rx="2" fill="#3D4430"/>
+        <rect x="4"   y="6"   width="18" height="5" rx="2" fill="#3D4430"/>
+      </g>
+      <!-- ☲ Li (Fire) - right -->
+      <g transform="rotate(90)translate(0,-260)">
+        <rect x="-22" y="-12" width="44" height="5" rx="2" fill="#3D4430"/>
+        <rect x="-22" y="-3"  width="18" height="5" rx="2" fill="#3D4430"/>
+        <rect x="4"   y="-3"  width="18" height="5" rx="2" fill="#3D4430"/>
+        <rect x="-22" y="6"   width="44" height="5" rx="2" fill="#3D4430"/>
+      </g>
+      <!-- ☳ Zhen (Thunder) - NE -->
+      <g transform="rotate(45)translate(0,-260)">
+        <rect x="-22" y="-12" width="44" height="5" rx="2" fill="#3D4430"/>
+        <rect x="-22" y="-3"  width="18" height="5" rx="2" fill="#3D4430"/>
+        <rect x="4"   y="-3"  width="18" height="5" rx="2" fill="#3D4430"/>
+        <rect x="-22" y="6"   width="18" height="5" rx="2" fill="#3D4430"/>
+        <rect x="4"   y="6"   width="18" height="5" rx="2" fill="#3D4430"/>
+      </g>
+      <!-- ☴ Xun (Wind) - NW -->
+      <g transform="rotate(315)translate(0,-260)">
+        <rect x="-22" y="-12" width="18" height="5" rx="2" fill="#3D4430"/>
+        <rect x="4"   y="-12" width="18" height="5" rx="2" fill="#3D4430"/>
+        <rect x="-22" y="-3"  width="44" height="5" rx="2" fill="#3D4430"/>
+        <rect x="-22" y="6"   width="44" height="5" rx="2" fill="#3D4430"/>
+      </g>
+      <!-- ☶ Gen (Mountain) - SE -->
+      <g transform="rotate(135)translate(0,-260)">
+        <rect x="-22" y="-12" width="18" height="5" rx="2" fill="#3D4430"/>
+        <rect x="4"   y="-12" width="18" height="5" rx="2" fill="#3D4430"/>
+        <rect x="-22" y="-3"  width="18" height="5" rx="2" fill="#3D4430"/>
+        <rect x="4"   y="-3"  width="18" height="5" rx="2" fill="#3D4430"/>
+        <rect x="-22" y="6"   width="44" height="5" rx="2" fill="#3D4430"/>
+      </g>
+      <!-- ☱ Dui (Lake) - SW -->
+      <g transform="rotate(225)translate(0,-260)">
+        <rect x="-22" y="-12" width="18" height="5" rx="2" fill="#3D4430"/>
+        <rect x="4"   y="-12" width="18" height="5" rx="2" fill="#3D4430"/>
+        <rect x="-22" y="-3"  width="44" height="5" rx="2" fill="#3D4430"/>
+        <rect x="-22" y="6"   width="44" height="5" rx="2" fill="#3D4430"/>
+      </g>
+
+      <!-- Yin-Yang circle -->
+      <circle cx="0" cy="0" r="60" fill="none" stroke="#3D4430" stroke-width="1.5"/>
+      <circle cx="0" cy="-30" r="30" fill="#3D4430" fill-opacity="0.12"/>
+      <circle cx="0" cy="30"  r="30" fill="none"/>
+      <circle cx="0" cy="-30" r="8"  fill="#3D4430" fill-opacity="0.06"/>
+      <circle cx="0" cy="30"  r="8"  fill="#3D4430" fill-opacity="0.18"/>
+      <path d="M 0,-60 A 60,60 0 0,1 0,60 A 30,30 0 0,1 0,0 A 30,30 0 0,0 0,-60" fill="#3D4430" fill-opacity="0.08"/>
+
+      <!-- Outer rings -->
+      <circle cx="0" cy="0" r="180" fill="none" stroke="#3D4430" stroke-width="0.8" stroke-dasharray="4 8"/>
+      <circle cx="0" cy="0" r="220" fill="none" stroke="#3D4430" stroke-width="0.5"/>
+      <circle cx="0" cy="0" r="300" fill="none" stroke="#B8945A" stroke-width="0.6" stroke-opacity="0.4"/>
+    </g>
+  </svg>
+
+  <div class="hero-ring r3"></div>
+  <div class="hero-ring r1"></div>
+  <div class="hero-ring r2"></div>
+
+  <p class="hero-org">本質論碼學院 × 易經散步所</p>
+
+  <h1 class="hero-title">
+    看懂自己<br>
+    也看懂<span>別人</span>
+  </h1>
+
+  <div class="hero-rule"></div>
+
+  <p class="hero-sub">
+    東方智慧 × 西方系統<br>
+    兩套工具，看清你的生命與關係
+  </p>
+
+  <div class="hero-cta">
+    <a href="#register" class="btn-cta">立即報名</a>
+    <p class="hero-price-tag">講座費用 <strong>NT$ 1,280</strong></p>
+  </div>
+
+  <div class="hero-scroll">
+    <span class="scroll-txt">scroll</span>
+    <div class="scroll-line"></div>
+  </div>
+</header>
+
+<!-- ══════════ TWO SYSTEMS ══════════ -->
+<section class="systems fade">
+
+  <!-- Numerology numbers as background watermark -->
+  <svg class="systems-bg-svg" viewBox="0 0 700 600" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+    <!-- Large faded numerology numbers scattered -->
+    <text x="30"  y="140" font-family="Cormorant Garamond, serif" font-size="180" fill="#D4AF7A" opacity="0.06" font-weight="300">1</text>
+    <text x="130" y="320" font-family="Cormorant Garamond, serif" font-size="130" fill="#D4AF7A" opacity="0.05" font-weight="300">3</text>
+    <text x="400" y="200" font-family="Cormorant Garamond, serif" font-size="200" fill="#D4AF7A" opacity="0.055" font-weight="300">7</text>
+    <text x="520" y="480" font-family="Cormorant Garamond, serif" font-size="160" fill="#D4AF7A" opacity="0.045" font-weight="300">9</text>
+    <text x="250" y="540" font-family="Cormorant Garamond, serif" font-size="110" fill="#D4AF7A" opacity="0.04" font-weight="300">11</text>
+    <text x="580" y="140" font-family="Cormorant Garamond, serif" font-size="100" fill="#D4AF7A" opacity="0.04" font-weight="300">4</text>
+    <!-- I Ching line patterns on right edge -->
+    <g transform="translate(650,80)" opacity="0.08">
+      <!-- Hexagram lines, solid + broken -->
+      <rect x="0" y="0"  width="40" height="4" rx="2" fill="#D4AF7A"/>
+      <rect x="0" y="10" width="17" height="4" rx="2" fill="#D4AF7A"/>
+      <rect x="23" y="10" width="17" height="4" rx="2" fill="#D4AF7A"/>
+      <rect x="0" y="20" width="40" height="4" rx="2" fill="#D4AF7A"/>
+      <rect x="0" y="30" width="17" height="4" rx="2" fill="#D4AF7A"/>
+      <rect x="23" y="30" width="17" height="4" rx="2" fill="#D4AF7A"/>
+      <rect x="0" y="40" width="40" height="4" rx="2" fill="#D4AF7A"/>
+      <rect x="0" y="50" width="40" height="4" rx="2" fill="#D4AF7A"/>
+    </g>
+    <g transform="translate(20,380)" opacity="0.07">
+      <rect x="0" y="0"  width="40" height="4" rx="2" fill="#D4AF7A"/>
+      <rect x="0" y="10" width="40" height="4" rx="2" fill="#D4AF7A"/>
+      <rect x="0" y="20" width="17" height="4" rx="2" fill="#D4AF7A"/>
+      <rect x="23" y="20" width="17" height="4" rx="2" fill="#D4AF7A"/>
+      <rect x="0" y="30" width="40" height="4" rx="2" fill="#D4AF7A"/>
+      <rect x="0" y="40" width="17" height="4" rx="2" fill="#D4AF7A"/>
+      <rect x="23" y="40" width="17" height="4" rx="2" fill="#D4AF7A"/>
+      <rect x="0" y="50" width="17" height="4" rx="2" fill="#D4AF7A"/>
+      <rect x="23" y="50" width="17" height="4" rx="2" fill="#D4AF7A"/>
+    </g>
+  </svg>
+
+  <div class="systems-inner">
+    <span class="eyebrow">Two Systems · 兩套系統</span>
+    <h2 class="systems-title">
+      一個看懂<strong>你是誰</strong><br>
+      一個看懂<strong>你在哪裡</strong>
+    </h2>
+    <div class="sys-rule"></div>
+
+    <div class="sys-grid">
+      <div class="sys-card">
+        <!-- Numerology symbol watermark inside card -->
+        <svg class="sys-card-bg" width="90" height="90" viewBox="0 0 90 90" aria-hidden="true">
+          <text x="5" y="80" font-family="Cormorant Garamond,serif" font-size="90" fill="#D4AF7A" font-weight="300">7</text>
+        </svg>
+        <p class="sys-tag">Western · 西方</p>
+        <div class="sys-num">01</div>
+        <h3 class="sys-name">數字論碼</h3>
+        <span class="sys-origin">Numerology</span>
+        <p class="sys-desc">
+          解讀你的本質性格<br>
+          天賦、盲點與慣性模式<br>
+          為什麼你會這樣想、這樣做
+        </p>
+      </div>
+      <div class="sys-card">
+        <!-- Hexagram watermark inside card -->
+        <svg class="sys-card-bg" width="90" height="90" viewBox="0 0 60 80" aria-hidden="true">
+          <rect x="0" y="0"  width="60" height="7" rx="3" fill="#D4AF7A"/>
+          <rect x="0" y="13" width="25" height="7" rx="3" fill="#D4AF7A"/>
+          <rect x="35" y="13" width="25" height="7" rx="3" fill="#D4AF7A"/>
+          <rect x="0" y="26" width="60" height="7" rx="3" fill="#D4AF7A"/>
+          <rect x="0" y="39" width="25" height="7" rx="3" fill="#D4AF7A"/>
+          <rect x="35" y="39" width="25" height="7" rx="3" fill="#D4AF7A"/>
+          <rect x="0" y="52" width="60" height="7" rx="3" fill="#D4AF7A"/>
+          <rect x="0" y="65" width="60" height="7" rx="3" fill="#D4AF7A"/>
+        </svg>
+        <p class="sys-tag">Eastern · 東方</p>
+        <div class="sys-num">02</div>
+        <h3 class="sys-name">數字易經</h3>
+        <span class="sys-origin">I Ching</span>
+        <p class="sys-desc">
+          讀懂你的生命節奏<br>
+          什麼時候沉澱，什麼時候前進<br>
+          不是努力不夠，是時機不同
+        </p>
+      </div>
+    </div>
+
+    <div class="sys-bottom">
+      兩套系統同時看<br>
+      <strong>很多誤解會鬆開，很多壓力會放下</strong>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════ INFO + PRICE ══════════ -->
+<section class="info-sec fade">
+
+  <!-- Hexagrams floating in background -->
+  <svg class="info-bg-svg" viewBox="0 0 600 500" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+    <!-- Top-left hexagram -->
+    <g transform="translate(40,40)" opacity="0.07">
+      <rect x="0" y="0"  width="50" height="6" rx="3" fill="#3D4430"/>
+      <rect x="0" y="12" width="50" height="6" rx="3" fill="#3D4430"/>
+      <rect x="0" y="24" width="21" height="6" rx="3" fill="#3D4430"/>
+      <rect x="29" y="24" width="21" height="6" rx="3" fill="#3D4430"/>
+      <rect x="0" y="36" width="50" height="6" rx="3" fill="#3D4430"/>
+      <rect x="0" y="48" width="21" height="6" rx="3" fill="#3D4430"/>
+      <rect x="29" y="48" width="21" height="6" rx="3" fill="#3D4430"/>
+      <rect x="0" y="60" width="21" height="6" rx="3" fill="#3D4430"/>
+      <rect x="29" y="60" width="21" height="6" rx="3" fill="#3D4430"/>
+    </g>
+    <!-- Bottom-right hexagram -->
+    <g transform="translate(490,360)" opacity="0.065">
+      <rect x="0" y="0"  width="50" height="6" rx="3" fill="#3D4430"/>
+      <rect x="0" y="12" width="21" height="6" rx="3" fill="#3D4430"/>
+      <rect x="29" y="12" width="21" height="6" rx="3" fill="#3D4430"/>
+      <rect x="0" y="24" width="50" height="6" rx="3" fill="#3D4430"/>
+      <rect x="0" y="36" width="50" height="6" rx="3" fill="#3D4430"/>
+      <rect x="0" y="48" width="21" height="6" rx="3" fill="#3D4430"/>
+      <rect x="29" y="48" width="21" height="6" rx="3" fill="#3D4430"/>
+      <rect x="0" y="60" width="50" height="6" rx="3" fill="#3D4430"/>
+    </g>
+    <!-- Number watermarks -->
+    <text x="460" y="160" font-family="Cormorant Garamond,serif" font-size="120" fill="#B8945A" opacity="0.06" font-weight="300">3</text>
+    <text x="30"  y="420" font-family="Cormorant Garamond,serif" font-size="100" fill="#B8945A" opacity="0.05" font-weight="300">9</text>
+  </svg>
+
+  <div class="info-inner">
+    <span class="eyebrow-dark">活動資訊 · Event Details</span>
+
+    <!-- Price highlight -->
+    <div class="price-block">
+      <p class="price-label">講座費用 · Investment</p>
+      <div class="price-value"><sup>NT$</sup>1,280</div>
+      <p class="price-note">含講座全程 ＋ 案例解析 ＋ 互動Q&A</p>
+    </div>
+
+    <div class="info-rows">
+      <div class="info-row">
+        <span class="info-lbl">Date</span>
+        <span class="info-val">2026年4月27日（一）</span>
+      </div>
+      <div class="info-row">
+        <span class="info-lbl">Time</span>
+        <span class="info-val">13:00 ～ 17:00</span>
+      </div>
+      <div class="info-row">
+        <span class="info-lbl">Duration</span>
+        <span class="info-val">4小時</span>
+      </div>
+      <div class="info-row">
+        <span class="info-lbl">Format</span>
+        <span class="info-val">講座 ＋ 案例解析 ＋ Q&A</span>
+      </div>
+      <div class="info-row">
+        <span class="info-lbl">Host</span>
+        <span class="info-val">本質論碼學院 × 易經散步所</span>
+      </div>
+    </div>
+    <p class="info-note">名額有限・額滿即止</p>
+  </div>
+</section>
+
+<!-- ══════════ FORM ══════════ -->
+<section class="form-sec fade" id="register">
+
+  <!-- Subtle background symbols -->
+  <svg class="form-bg-svg" viewBox="0 0 600 600" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+    <text x="380" y="520" font-family="Cormorant Garamond,serif" font-size="200" fill="#5C6645" opacity="0.03" font-weight="300">1</text>
+    <text x="20"  y="200" font-family="Cormorant Garamond,serif" font-size="160" fill="#5C6645" opacity="0.025" font-weight="300">8</text>
+    <g transform="translate(510,40)" opacity="0.045">
+      <rect x="0" y="0"  width="44" height="5" rx="2" fill="#5C6645"/>
+      <rect x="0" y="11" width="44" height="5" rx="2" fill="#5C6645"/>
+      <rect x="0" y="22" width="18" height="5" rx="2" fill="#5C6645"/>
+      <rect x="26" y="22" width="18" height="5" rx="2" fill="#5C6645"/>
+      <rect x="0" y="33" width="44" height="5" rx="2" fill="#5C6645"/>
+      <rect x="0" y="44" width="18" height="5" rx="2" fill="#5C6645"/>
+      <rect x="26" y="44" width="18" height="5" rx="2" fill="#5C6645"/>
+      <rect x="0" y="55" width="44" height="5" rx="2" fill="#5C6645"/>
+    </g>
+  </svg>
+
+  <span class="eyebrow-dark" style="display:block; margin-bottom:16px; position:relative;">Registration · 報名</span>
+  <h2 class="form-title">留下你的位置</h2>
+
+  <div class="form-wrap">
+    <div class="f-field">
+      <label>姓名 · Name</label>
+      <input type="text" placeholder="請輸入姓名">
+    </div>
+    <div class="f-field">
+      <label>電話 · Phone</label>
+      <input type="tel" placeholder="請輸入聯絡電話">
+    </div>
+    <div class="f-field">
+      <label>Email · 信箱</label>
+      <input type="email" placeholder="請輸入電子信箱">
+    </div>
+    <div class="f-field">
+      <label>如何得知 · Source</label>
+      <select>
+        <option value="" disabled selected>請選擇</option>
+        <option>朋友推薦</option>
+        <option>社群媒體</option>
+        <option>搜尋引擎</option>
+        <option>其他</option>
+      </select>
+    </div>
+    <button class="btn-submit">送出報名・NT$ 1,280</button>
+    <p class="form-limit">完成報名後，我們將聯繫確認付款方式</p>
+  </div>
+</section>
+
+<footer>
+  <p>本質論碼學院 × 易經散步所 · 2026</p>
+</footer>
+
+<script>
+// Scroll reveal
+const io = new IntersectionObserver(entries => {
+  entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('on'); });
+}, { threshold: 0.1 });
+document.querySelectorAll('.fade').forEach(el => io.observe(el));
+
+// Form submission → Google Apps Script
+const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxd1uh27rKM-6PqKRJJqZWWRN-wLO4b78pG1O76vLHWf3BV8VF12NMQKhv9Cmajx1oV/exec';
+
+document.querySelector('.btn-submit').addEventListener('click', async () => {
+  const btn = document.querySelector('.btn-submit');
+  const name   = document.querySelector('input[type="text"]').value.trim();
+  const phone  = document.querySelector('input[type="tel"]').value.trim();
+  const email  = document.querySelector('input[type="email"]').value.trim();
+  const source = document.querySelector('select').value;
+
+  // Basic validation
+  if (!name || !phone || !email) {
+    showMsg('請填寫姓名、電話與信箱', 'error');
+    return;
+  }
+
+  btn.textContent = '送出中…';
+  btn.disabled = true;
+
+  try {
+    await fetch(SCRIPT_URL, {
+      method: 'POST',
+      mode: 'no-cors',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ name, phone, email, source })
+    });
+
+    // no-cors means we can't read response, but if no error thrown = success
+    showMsg('✓ 報名成功！我們將盡快與您聯繫', 'success');
+    btn.textContent = '已送出';
+
+    // Clear form
+    document.querySelector('input[type="text"]').value = '';
+    document.querySelector('input[type="tel"]').value = '';
+    document.querySelector('input[type="email"]').value = '';
+    document.querySelector('select').value = '';
+
+  } catch (err) {
+    showMsg('送出失敗，請稍後再試或直接聯繫我們', 'error');
+    btn.textContent = '送出報名・NT$ 1,280';
+    btn.disabled = false;
+  }
+});
+
+function showMsg(text, type) {
+  let msg = document.getElementById('form-msg');
+  if (!msg) {
+    msg = document.createElement('p');
+    msg.id = 'form-msg';
+    msg.style.cssText = 'margin-top:16px; font-size:0.85rem; letter-spacing:0.15em; line-height:2; transition: opacity 0.4s;';
+    document.querySelector('.form-wrap').appendChild(msg);
+  }
+  msg.textContent = text;
+  msg.style.color = type === 'success' ? '#5C6645' : '#B8945A';
+  msg.style.opacity = '1';
+}
+</script>
+</body>
+</html>
