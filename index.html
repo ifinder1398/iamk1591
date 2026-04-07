@@ -844,23 +844,23 @@ footer p {
   <div class="form-wrap">
     <div class="f-field">
       <label>姓名 · Name</label>
-      <input type="text" placeholder="請輸入姓名">
+      <input id="f-name" type="text" placeholder="請輸入姓名">
     </div>
     <div class="f-field">
       <label>電話 · Phone</label>
-      <input type="tel" placeholder="請輸入聯絡電話">
+      <input id="f-phone" type="tel" placeholder="請輸入聯絡電話">
     </div>
     <div class="f-field">
       <label>LINE ID</label>
-      <input type="text" placeholder="請輸入 LINE ID">
+      <input id="f-line" type="text" placeholder="請輸入 LINE ID">
     </div>
     <div class="f-field">
       <label>Email · 信箱</label>
-      <input type="email" placeholder="請輸入電子信箱">
+      <input id="f-email" type="email" placeholder="請輸入電子信箱">
     </div>
     <div class="f-field">
       <label>如何得知 · Source</label>
-      <select>
+      <select id="f-source">
         <option value="" disabled selected>請選擇</option>
         <option>朋友推薦</option>
         <option>社群媒體</option>
@@ -888,14 +888,13 @@ document.querySelectorAll('.fade').forEach(el => io.observe(el));
 const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxd1uh27rKM-6PqKRJJqZWWRN-wLO4b78pG1O76vLHWf3BV8VF12NMQKhv9Cmajx1oV/exec';
 
 document.querySelector('.btn-submit').addEventListener('click', async () => {
-  const btn = document.querySelector('.btn-submit');
-  const name   = document.querySelector('input[type="text"]').value.trim();
-  const phone  = document.querySelector('input[type="tel"]').value.trim();
-  const lineId = document.querySelectorAll('input[type="text"]')[1].value.trim();
-  const email  = document.querySelector('input[type="email"]').value.trim();
-  const source = document.querySelector('select').value;
+  const btn    = document.querySelector('.btn-submit');
+  const name   = document.getElementById('f-name').value.trim();
+  const phone  = document.getElementById('f-phone').value.trim();
+  const lineId = document.getElementById('f-line').value.trim();
+  const email  = document.getElementById('f-email').value.trim();
+  const source = document.getElementById('f-source').value;
 
-  // Basic validation
   if (!name || !phone || !email) {
     showMsg('請填寫姓名、電話與信箱', 'error');
     return;
@@ -912,16 +911,14 @@ document.querySelector('.btn-submit').addEventListener('click', async () => {
       body: JSON.stringify({ name, phone, lineId, email, source })
     });
 
-    // no-cors means we can't read response, but if no error thrown = success
     showMsg('✓ 報名成功！我們將盡快與您聯繫', 'success');
     btn.textContent = '已送出';
 
-    // Clear form
-    document.querySelector('input[type="text"]').value = '';
-    document.querySelector('input[type="tel"]').value = '';
-    document.querySelectorAll('input[type="text"]')[1].value = '';
-    document.querySelector('input[type="email"]').value = '';
-    document.querySelector('select').value = '';
+    document.getElementById('f-name').value  = '';
+    document.getElementById('f-phone').value = '';
+    document.getElementById('f-line').value  = '';
+    document.getElementById('f-email').value = '';
+    document.getElementById('f-source').value = '';
 
   } catch (err) {
     showMsg('送出失敗，請稍後再試或直接聯繫我們', 'error');
